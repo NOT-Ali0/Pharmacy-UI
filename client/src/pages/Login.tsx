@@ -40,7 +40,7 @@ export default function Login() {
   const presets = useMemo(
     () => ({
       pharmacy: { email: "pharmacy1@demo.com", password: "demo1" },
-      supplier: { email: "supplier1@demo.com", password: "demo1" },
+      supplier: { email: "farabi@pharma.iq", password: "demo1" },
     }),
     [],
   );

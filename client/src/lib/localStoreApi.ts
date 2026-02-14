@@ -21,6 +21,7 @@ import {
   type UpdateSupplierMedicineRequest,
   type SupplierPerformance,
 } from "@shared/schema";
+import { delay } from "./delay";
 
 const LS_STATE_KEY = "pharmsync.state.v1";
 const LS_ME_KEY = "pharmsync.me.v1";
@@ -395,10 +396,12 @@ function seedState(): AppState {
 // =====================
 
 export async function stateGet() {
+  await delay();
   return readState();
 }
 
 export async function stateResetToSeed() {
+  await delay();
   const seeded = seedState();
   writeState(seeded);
   writeMe(null);
@@ -406,15 +409,18 @@ export async function stateResetToSeed() {
 }
 
 export async function authMe() {
+  await delay();
   ensureSeeded();
   return readMe();
 }
 
 export async function authLogout() {
+  await delay();
   writeMe(null);
 }
 
 export async function authLogin(input: LoginRequest) {
+  await delay();
   ensureSeeded();
   const state = readState();
 
@@ -442,6 +448,7 @@ export async function authLogin(input: LoginRequest) {
 }
 
 export async function authRegister(input: RegisterRequest) {
+  await delay();
   ensureSeeded();
   const state = readState();
 
@@ -503,12 +510,14 @@ export async function authRegister(input: RegisterRequest) {
 }
 
 export async function medicinesList() {
+  await delay();
   ensureSeeded();
   const state = readState();
   return state.medicines.map((m) => parseWithLogging(medicineSchema, m, "medicines.list.item"));
 }
 
 export async function suppliersList(input?: { search?: string }) {
+  await delay();
   ensureSeeded();
   const state = readState();
   const search = (input?.search || "").trim().toLowerCase();
@@ -522,6 +531,7 @@ export async function suppliersList(input?: { search?: string }) {
 }
 
 export async function pharmaciesList() {
+  await delay();
   ensureSeeded();
   const state = readState();
   return state.pharmacies.map((p) => {
@@ -534,6 +544,7 @@ export async function supplierMedicinesListBySupplier(
   supplierId: string,
   input?: { search?: string; sortBy?: "name" | "price" | "stock"; sortDir?: "asc" | "desc"; onlyAvailable?: boolean },
 ) {
+  await delay();
   ensureSeeded();
   const state = readState();
   const supplier = state.suppliers.find((s) => s.id === supplierId);
@@ -572,6 +583,7 @@ export async function supplierMedicinesListBySupplier(
 }
 
 export async function supplierMedicinesCreate(payload: CreateSupplierMedicineRequest) {
+  await delay();
   ensureSeeded();
   const state = readState();
   // Validate references
@@ -603,6 +615,7 @@ export async function supplierMedicinesCreate(payload: CreateSupplierMedicineReq
 }
 
 export async function supplierMedicinesUpdate(id: string, updates: UpdateSupplierMedicineRequest) {
+  await delay();
   ensureSeeded();
   const state = readState();
   const idx = state.supplierMedicines.findIndex((x) => x.id === id);
@@ -634,6 +647,7 @@ export async function supplierMedicinesUpdate(id: string, updates: UpdateSupplie
 }
 
 export async function supplierMedicinesDelete(id: string) {
+  await delay();
   ensureSeeded();
   const state = readState();
   const current = state.supplierMedicines.find((x) => x.id === id);
@@ -649,6 +663,7 @@ export async function supplierMedicinesDelete(id: string) {
 }
 
 export async function ordersList(input?: { role: "pharmacy" | "supplier"; userId: string; status?: "pending" | "approved" | "rejected" }) {
+  await delay();
   ensureSeeded();
   const state = readState();
   let list = state.orders.slice();
@@ -665,6 +680,7 @@ export async function ordersList(input?: { role: "pharmacy" | "supplier"; userId
 }
 
 export async function ordersCreate(payload: CreateOrderRequest) {
+  await delay();
   ensureSeeded();
   const state = readState();
 
@@ -732,6 +748,7 @@ export async function ordersCreate(payload: CreateOrderRequest) {
 }
 
 export async function ordersDecide(orderId: string, decision: DecideOrderRequest) {
+  await delay();
   ensureSeeded();
   const state = readState();
   const idx = state.orders.findIndex((o) => o.id === orderId);
@@ -781,6 +798,7 @@ export async function ordersDecide(orderId: string, decision: DecideOrderRequest
 }
 
 export async function ratingsCreate(rating: Omit<Rating, "id" | "createdAt">) {
+  await delay();
   ensureSeeded();
   const state = readState();
   const next = parseWithLogging(
@@ -798,6 +816,7 @@ export async function ratingsCreate(rating: Omit<Rating, "id" | "createdAt">) {
 }
 
 export async function supplierPerformanceGet(supplierId: string): Promise<SupplierPerformance> {
+  await delay();
   ensureSeeded();
   const state = readState();
 
@@ -841,6 +860,7 @@ export async function supplierPerformanceGet(supplierId: string): Promise<Suppli
 }
 
 export async function notificationsList(input?: { role: "pharmacy" | "supplier"; userId: string }) {
+  await delay();
   ensureSeeded();
   const state = readState();
   let list = state.notifications.slice().sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
@@ -856,6 +876,7 @@ export async function notificationsList(input?: { role: "pharmacy" | "supplier";
 }
 
 export async function notificationsMarkRead(id: string) {
+  await delay();
   ensureSeeded();
   const state = readState();
   const idx = state.notifications.findIndex((n) => n.id === id);
@@ -865,6 +886,7 @@ export async function notificationsMarkRead(id: string) {
 }
 
 export async function notificationsMarkAllRead(input: { role: "pharmacy" | "supplier"; userId: string }) {
+  await delay();
   ensureSeeded();
   const state = readState();
   state.notifications = state.notifications.map((n) => {

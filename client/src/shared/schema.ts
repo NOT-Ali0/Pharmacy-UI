@@ -66,6 +66,27 @@ export const orderSchema = z.object({
 export type Order = z.infer<typeof orderSchema>;
 export type OrderStatus = Order["status"];
 
+export const ratingSchema = z.object({
+    id: z.string(),
+    supplierId: z.string(),
+    pharmacyId: z.string(),
+    rating: z.number().min(1).max(5),
+    comment: z.string().optional(),
+    createdAt: z.string(),
+});
+export type Rating = z.infer<typeof ratingSchema>;
+
+export const supplierPerformanceSchema = z.object({
+    score: z.number(), // 0-100
+    fulfillmentRate: z.number(), // 0-100
+    onTimeRate: z.number(), // 0-100 (simulated)
+    cancellationRate: z.number(), // 0-100
+    totalRatings: z.number(),
+    averageRating: z.number(),
+    status: z.enum(["Excellent", "Good", "Average", "Poor"]),
+});
+export type SupplierPerformance = z.infer<typeof supplierPerformanceSchema>;
+
 export const notificationSchema = z.object({
     id: z.string(),
     createdAt: z.string(),
@@ -94,6 +115,7 @@ export const appStateSchema = z.object({
     pharmacies: z.array(pharmacySchema),
     supplierMedicines: z.array(supplierMedicineSchema),
     orders: z.array(orderSchema),
+    ratings: z.array(ratingSchema),
     notifications: z.array(notificationSchema),
 });
 export type AppState = z.infer<typeof appStateSchema>;

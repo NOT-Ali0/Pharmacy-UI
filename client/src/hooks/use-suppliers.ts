@@ -21,3 +21,14 @@ export function useSuppliers(search?: string) {
     },
   });
 }
+
+export function useSupplierPerformance(supplierId: string) {
+  return useQuery({
+    queryKey: ["supplier-performance", supplierId],
+    queryFn: async () => {
+      const { supplierPerformanceGet } = await import("@/lib/localStoreApi");
+      return supplierPerformanceGet(supplierId);
+    },
+    enabled: !!supplierId,
+  });
+}

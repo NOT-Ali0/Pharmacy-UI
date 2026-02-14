@@ -3,13 +3,16 @@ import { Link, useParams } from "wouter";
 import { MapPin, ShoppingBag } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { useMe } from "@/hooks/use-auth";
-import { useSuppliers } from "@/hooks/use-suppliers";
+import { useSuppliers, useSupplierPerformance } from "@/hooks/use-suppliers";
 import { useSupplierMedicinesBySupplier } from "@/hooks/use-supplier-medicines";
 import { MedicineTable } from "@/components/MedicineTable";
 import { OrderFormModal } from "@/components/OrderFormModal";
+import { SupplierPerformanceCard } from "@/components/SupplierPerformanceCard";
+import { RatingDialog } from "@/components/RatingDialog";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import { Star } from "lucide-react";
 
 export default function SupplierDetails() {
   const params = useParams() as { id?: string };
@@ -32,8 +35,11 @@ export default function SupplierDetails() {
     onlyAvailable,
   });
 
+  const { data: performance } = useSupplierPerformance(supplierId);
+
   const [selected, setSelected] = useState<Record<string, { quantity: number; maxStock: number; available: boolean; name: string; unitPrice: number }>>({});
   const [orderOpen, setOrderOpen] = useState(false);
+  const [ratingOpen, setRatingOpen] = useState(false);
 
   const onSort = (by: "name" | "price" | "stock") => {
     if (sortBy === by) setSortDir((d) => (d === "asc" ? "desc" : "asc"));
@@ -85,6 +91,14 @@ export default function SupplierDetails() {
               ← Suppliers
             </Button>
           </Link>
+          <Button
+            variant="outline"
+            className="rounded-xl border-amber-200 text-amber-600 hover:bg-amber-50"
+            onClick={() => setRatingOpen(true)}
+          >
+            <Star className="h-4 w-4 mr-2" />
+            Rate supplier
+          </Button>
           <Button
             className={cn(
               "rounded-xl bg-gradient-to-r from-primary to-primary/85 shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/25",
@@ -154,29 +168,35 @@ export default function SupplierDetails() {
           )}
         </div>
 
-        <div className="rounded-2xl border border-border/60 bg-card/70 backdrop-blur shadow-lg shadow-black/5 overflow-hidden">
-          <div className="p-5">
-            <div className="text-lg font-bold tracking-tight flex items-center gap-2">
-              <MapPin className="h-5 w-5 text-primary" />
-              Location
+        <div className="space-y-4">
+          {performance && (
+            <SupplierPerformanceCard performance={performance} />
+          )}
+
+          <div className="rounded-2xl border border-border/60 bg-card/70 backdrop-blur shadow-lg shadow-black/5 overflow-hidden">
+            <div className="p-5">
+              <div className="text-lg font-bold tracking-tight flex items-center gap-2">
+                <MapPin className="h-5 w-5 text-primary" />
+                Location
+              </div>
+              <div className="mt-1 text-sm text-muted-foreground">{supplier.locationName}</div>
             </div>
-            <div className="mt-1 text-sm text-muted-foreground">{supplier.locationName}</div>
-          </div>
-          <div className="h-[320px] lg:h-[420px] border-t border-border/60">
-            <iframe
-              title="Supplier map"
-              src={mapsSrc}
-              className="w-full h-full"
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              data-testid="supplier-map"
-            />
-          </div>
-          <div className="p-5 text-sm text-muted-foreground">
-            Embedded Google Map (no API key). Coordinates:{" "}
-            <span className="font-extrabold text-foreground">
-              {supplier.lat}, {supplier.lng}
-            </span>
+            <div className="h-[320px] lg:h-[420px] border-t border-border/60">
+              <iframe
+                title="Supplier map"
+                src={mapsSrc}
+                className="w-full h-full"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                data-testid="supplier-map"
+              />
+            </div>
+            <div className="p-5 text-sm text-muted-foreground">
+              Embedded Google Map (no API key). Coordinates:{" "}
+              <span className="font-extrabold text-foreground">
+                {supplier.lat}, {supplier.lng}
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -188,6 +208,14 @@ export default function SupplierDetails() {
         pharmacyId={pharmacyId}
         selected={selected}
         onResetSelected={() => setSelected({})}
+      />
+
+      <RatingDialog
+        open={ratingOpen}
+        onOpenChange={setRatingOpen}
+        supplierId={supplierId}
+        pharmacyId={pharmacyId}
+        supplierName={supplier?.name || ""}
       />
     </AppShell>
   );

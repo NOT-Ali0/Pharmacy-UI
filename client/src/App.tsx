@@ -12,6 +12,7 @@ import Register from "@/pages/Register";
 import SupplierDashboard from "@/pages/SupplierDashboard";
 import SupplierMedicines from "@/pages/SupplierMedicines";
 import SupplierOrders from "@/pages/SupplierOrders";
+import SupplierAnalytics from "@/pages/SupplierAnalytics";
 
 import PharmacyDashboard from "@/pages/PharmacyDashboard";
 import PharmacySuppliers from "@/pages/PharmacySuppliers";
@@ -32,6 +33,7 @@ function Router() {
       <Route path="/supplier" component={SupplierDashboard} />
       <Route path="/supplier/medicines" component={SupplierMedicines} />
       <Route path="/supplier/orders" component={SupplierOrders} />
+      <Route path="/supplier/analytics" component={SupplierAnalytics} />
 
       <Route path="/pharmacy" component={PharmacyDashboard} />
       <Route path="/pharmacy/suppliers" component={PharmacySuppliers} />

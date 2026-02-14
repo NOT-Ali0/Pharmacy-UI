@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Link } from "wouter";
-import { ClipboardList, Pill, Sparkles, TrendingUp } from "lucide-react";
+import { ClipboardList, Pill, Sparkles, TrendingUp, BarChart3 } from "lucide-react";
 import { AppShell } from "@/components/AppShell";
 import { StatCard } from "@/components/StatCard";
 import { useMe } from "@/hooks/use-auth";
@@ -57,6 +57,12 @@ export default function SupplierDashboard() {
             <Button variant="outline" className="rounded-xl" data-testid="cta-view-orders">
               <ClipboardList className="h-4 w-4 mr-2" />
               View orders
+            </Button>
+          </Link>
+          <Link href="/supplier/analytics" className="inline-flex">
+            <Button variant="outline" className="rounded-xl border-primary/30 text-primary hover:bg-primary/5 shadow-pill" data-testid="cta-view-analytics">
+              <BarChart3 className="h-4 w-4 mr-2" />
+              View analytics
             </Button>
           </Link>
         </div>

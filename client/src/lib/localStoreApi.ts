@@ -7,6 +7,7 @@ import {
   supplierSchema,
   supplierMedicineSchema,
   orderSchema,
+  ratingSchema,
   notificationSchema,
   type AppState,
   type CreateOrderRequest,
@@ -14,9 +15,11 @@ import {
   type CurrentUser,
   type DecideOrderRequest,
   type LoginRequest,
+  type Rating,
   type RegisterRequest,
   type SupplierMedicine,
   type UpdateSupplierMedicineRequest,
+  type SupplierPerformance,
 } from "@shared/schema";
 
 const LS_STATE_KEY = "pharmsync.state.v1";
@@ -101,33 +104,173 @@ function seedState(): AppState {
   const suppliers = [
     {
       id: uid("sup"),
-      name: "NorthBridge Med Supply",
-      email: "supplier1@demo.com",
+      name: "Farabi Pharma Scientific Bureau",
+      email: "farabi@pharma.iq",
       password: "demo1",
-      phone: "+1 (555) 014-1201",
-      locationName: "Brooklyn, NY",
-      lat: 40.6782,
-      lng: -73.9442,
+      phone: "+964 780 123 4567",
+      locationName: "Al-Sa'adoon St, Baghdad",
+      lat: 33.3152,
+      lng: 44.3661,
     },
     {
       id: uid("sup"),
-      name: "HarborLine Pharmaceuticals",
-      email: "supplier2@demo.com",
-      password: "demo2",
-      phone: "+1 (555) 014-2044",
-      locationName: "Jersey City, NJ",
-      lat: 40.7178,
-      lng: -74.0431,
+      name: "Al-Raed Group",
+      email: "contact@raed-group.iq",
+      password: "demo1",
+      phone: "+964 770 987 6543",
+      locationName: "Al-Mansour, Baghdad",
+      lat: 33.3333,
+      lng: 44.3211,
     },
     {
       id: uid("sup"),
-      name: "Crescent Health Wholesale",
-      email: "supplier3@demo.com",
-      password: "demo3",
-      phone: "+1 (555) 014-3399",
-      locationName: "Queens, NY",
-      lat: 40.7282,
-      lng: -73.7949,
+      name: "Al-Thuraya Pharma Group",
+      email: "info@thuraya-pharma.iq",
+      password: "demo1",
+      phone: "+964 790 111 2222",
+      locationName: "Al-Karrada, Baghdad",
+      lat: 33.3012,
+      lng: 44.4231,
+    },
+    {
+      id: uid("sup"),
+      name: "Areej Baghdad Wholesales",
+      email: "areej@baghdad.iq",
+      password: "demo1",
+      phone: "+964 781 222 3333",
+      locationName: "Al-Harithiya, Baghdad",
+      lat: 33.3188,
+      lng: 44.3544,
+    },
+    {
+      id: uid("sup"),
+      name: "Xenofarma Iraq",
+      email: "office@xenofarma.iq",
+      password: "demo1",
+      phone: "+964 750 444 5555",
+      locationName: "Gulan Street, Erbil",
+      lat: 36.1901,
+      lng: 44.0091,
+    },
+    {
+      id: uid("sup"),
+      name: "ESB Group",
+      email: "info@esb-group.iq",
+      password: "demo1",
+      phone: "+964 750 666 7777",
+      locationName: "100m Road, Erbil",
+      lat: 36.2122,
+      lng: 43.9877,
+    },
+    {
+      id: uid("sup"),
+      name: "Organo Pharmaceuticals",
+      email: "dist@organo.iq",
+      password: "demo1",
+      phone: "+964 750 888 9999",
+      locationName: "Bakhtyari, Erbil",
+      lat: 36.1755,
+      lng: 44.0122,
+    },
+    {
+      id: uid("sup"),
+      name: "Madar Al-Hayat",
+      email: "sales@madar-alhayat.iq",
+      password: "demo1",
+      phone: "+964 750 000 1111",
+      locationName: "Ankawa Rd, Erbil",
+      lat: 36.2344,
+      lng: 43.9988,
+    },
+    {
+      id: uid("sup"),
+      name: "SaMed Pharma Basra",
+      email: "basra@samed.iq",
+      password: "demo1",
+      phone: "+964 780 333 4444",
+      locationName: "Al-Ashar, Basra",
+      lat: 30.5081,
+      lng: 47.7835,
+    },
+    {
+      id: uid("sup"),
+      name: "Al Tawasul Logistics",
+      email: "ops@tawasul.iq",
+      password: "demo1",
+      phone: "+964 781 555 6666",
+      locationName: "Al-Zubair Industrial, Basra",
+      lat: 30.3988,
+      lng: 47.6544,
+    },
+    {
+      id: uid("sup"),
+      name: "Kawkab Group Mosul",
+      email: "mosul@kawkab.iq",
+      password: "demo1",
+      phone: "+964 771 777 8888",
+      locationName: "Al-Zuhour District, Mosul",
+      lat: 36.3489,
+      lng: 43.1577,
+    },
+    {
+      id: uid("sup"),
+      name: "Nineveh Med Supply",
+      email: "contact@nineveh-med.iq",
+      password: "demo1",
+      phone: "+964 770 222 9999",
+      locationName: "Al-Muthanna, Mosul",
+      lat: 36.3655,
+      lng: 43.1422,
+    },
+    {
+      id: uid("sup"),
+      name: "Sulaymaniyah Health Bridge",
+      email: "info@sul-health.iq",
+      password: "demo1",
+      phone: "+964 770 123 0000",
+      locationName: "Salim St, Sulaymaniyah",
+      lat: 35.5558,
+      lng: 45.4329,
+    },
+    {
+      id: uid("sup"),
+      name: "Najaf Al-Ashraf Medical",
+      email: "najaf@med-center.iq",
+      password: "demo1",
+      phone: "+964 782 444 0000",
+      locationName: "Medina St, Najaf",
+      lat: 31.9922,
+      lng: 44.3195,
+    },
+    {
+      id: uid("sup"),
+      name: "Karbala Pharma Care",
+      email: "care@karbala-pharma.iq",
+      password: "demo1",
+      phone: "+964 781 666 1111",
+      locationName: "Al-Abbas St, Karbala",
+      lat: 32.6160,
+      lng: 44.0248,
+    },
+    {
+      id: uid("sup"),
+      name: "Kirkuk Medical Depot",
+      email: "kirkuk@depot.iq",
+      password: "demo1",
+      phone: "+964 770 555 2222",
+      locationName: "Baghdad Rd, Kirkuk",
+      lat: 35.4687,
+      lng: 44.3924,
+    },
+    {
+      id: uid("sup"),
+      name: "Duhok Pharma Distro",
+      email: "duhok@pharma-dist.iq",
+      password: "demo1",
+      phone: "+964 750 777 3333",
+      locationName: "KRO District, Duhok",
+      lat: 36.8665,
+      lng: 42.9888,
     },
   ].map((s) => parseWithLogging(supplierSchema, s, "seed.supplier"));
 
@@ -240,6 +383,7 @@ function seedState(): AppState {
       pharmacies,
       supplierMedicines: sm,
       orders,
+      ratings: [],
       notifications,
     },
     "seed.state",
@@ -634,6 +778,66 @@ export async function ordersDecide(orderId: string, decision: DecideOrderRequest
   });
 
   return next;
+}
+
+export async function ratingsCreate(rating: Omit<Rating, "id" | "createdAt">) {
+  ensureSeeded();
+  const state = readState();
+  const next = parseWithLogging(
+    ratingSchema,
+    {
+      ...rating,
+      id: uid("rat"),
+      createdAt: nowIso(),
+    },
+    "ratings.create"
+  );
+  state.ratings = [next, ...state.ratings];
+  writeState(state);
+  return next;
+}
+
+export async function supplierPerformanceGet(supplierId: string): Promise<SupplierPerformance> {
+  ensureSeeded();
+  const state = readState();
+
+  const supplierOrders = state.orders.filter(o => o.supplierId === supplierId);
+  const supplierRatings = state.ratings.filter(r => r.supplierId === supplierId);
+
+  const total = supplierOrders.length;
+  const approved = supplierOrders.filter(o => o.status === "approved").length;
+  const rejected = supplierOrders.filter(o => o.status === "rejected").length;
+
+  const fulfillmentRate = total > 0 ? (approved / total) * 100 : 100;
+  const cancellationRate = total > 0 ? (rejected / total) * 100 : 0;
+  // Simulated on-time rate for demo
+  const onTimeRate = total > 0 ? Math.max(85, 100 - (cancellationRate / 2)) : 100;
+
+  const avgRating = supplierRatings.length > 0
+    ? supplierRatings.reduce((sum, r) => sum + r.rating, 0) / supplierRatings.length
+    : 4.5; // Default for new or unrated suppliers in demo
+
+  // Calculate aggregate score
+  const score = Math.round(
+    (fulfillmentRate * 0.4) +
+    (onTimeRate * 0.3) +
+    ((avgRating / 5) * 100 * 0.3)
+  );
+
+  let status: SupplierPerformance["status"] = "Average";
+  if (score >= 90) status = "Excellent";
+  else if (score >= 75) status = "Good";
+  else if (score < 50) status = "Poor";
+
+  return {
+    score,
+    fulfillmentRate: Math.round(fulfillmentRate),
+    onTimeRate: Math.round(onTimeRate),
+    cancellationRate: Math.round(cancellationRate),
+    totalRatings: supplierRatings.length,
+    averageRating: Number(avgRating.toFixed(1)),
+    status,
+  };
 }
 
 export async function notificationsList(input?: { role: "pharmacy" | "supplier"; userId: string }) {
